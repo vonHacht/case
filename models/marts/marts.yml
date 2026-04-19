@@ -1,0 +1,147 @@
+version: 2
+
+models:
+  - name: dim_pokemon
+    description: >
+      Dimension table containing descriptive attributes of Pokémon.
+      Each row represents a single Pokémon entity.
+
+    columns:
+      - name: pokemon_id
+        description: Unique identifier for the Pokémon
+        tests:
+          - not_null
+          - unique
+
+      - name: pokemon_name
+        description: Name of the Pokémon
+        tests:
+          - not_null
+
+      - name: species_id
+        description: Identifier for the Pokémon species
+        tests:
+          - not_null
+
+      - name: species_name
+        description: Name of the species
+        tests:
+          - not_null
+
+      - name: height
+        description: Height of the Pokémon
+        tests:
+          - not_null
+
+      - name: weight
+        description: Weight of the Pokémon
+        tests:
+          - not_null
+
+      - name: base_experience
+        description: Base experience value
+
+  - name: dim_type
+    description: >
+      Dimension table containing Pokémon type classifications.
+
+    columns:
+      - name: type_id
+        description: Unique identifier for the type
+        tests:
+          - not_null
+          - unique
+
+      - name: type_name
+        description: Name of the type (e.g., fire, water)
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_pokemon_type
+    description: >
+      Fact/bridge table linking Pokémon to their types.
+      Each row represents one Pokémon-type relationship.
+
+    tests:
+      - unique:
+          column_name: "(pokemon_id || '-' || type_slot)"
+
+    columns:
+      - name: pokemon_id
+        description: Foreign key to dim_pokemon
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_pokemon')
+              field: pokemon_id
+
+      - name: type_id
+        description: Foreign key to dim_type
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_type')
+              field: type_id
+
+      - name: type_slot
+        description: Indicates primary (1) or secondary (2) type
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2]
+
+  - name: obt_pokemon
+    description: >
+      One Big Table (OBT) combining Pokémon attributes and their types into a single
+      denormalized table for easy analysis and visualization.
+
+    columns:
+      - name: pokemon_id
+        description: Unique Pokémon identifier
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_pokemon')
+              field: pokemon_id
+
+      - name: pokemon_name
+        description: Name of the Pokémon
+        tests:
+          - not_null
+
+      - name: species_name
+        description: Species classification
+        tests:
+          - not_null
+
+      - name: primary_type
+        description: Primary Pokémon type
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_type')
+              field: type_name
+
+      - name: secondary_type
+        description: Secondary Pokémon type (if exists)
+        tests:
+          - relationships:
+              to: ref('dim_type')
+              field: type_name
+              config:
+                where: "secondary_type is not null"
+
+      - name: height
+        description: Height of the Pokémon
+        tests:
+          - not_null
+
+      - name: weight
+        description: Weight of the Pokémon
+        tests:
+          - not_null
+
+      - name: base_experience
+        description: Base experience metric

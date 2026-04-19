@@ -27,3 +27,7 @@ GRANT ALL PRIVILEGES ON DATABASE <db> TO <username>;
 sudo apt update
 sudo apt install postgresql postgresql-contrib -y
 ```
+
+```
+dbt seed
+```

@@ -1,0 +1,8 @@
+type_id,type_name
+1,normal
+3,flying
+4,poison
+7,bug
+10,fire
+11,water
+12,grass

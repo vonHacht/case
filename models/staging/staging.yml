@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_pokemon
+    description: >
+      Cleaned Pokémon data ingested from the PokéAPI. Each row represents a single Pokémon
+      with core attributes such as height, weight, and species information.
+
+    columns:
+      - name: pokemon_id
+        description: Unique identifier for the Pokémon
+        tests: [not_null, unique]
+
+      - name: pokemon_name
+        description: Name of the Pokémon
+
+      - name: height
+        description: Height of the Pokémon (decimeters)
+
+      - name: weight
+        description: Weight of the Pokémon (hectograms)
+
+      - name: base_experience
+        description: Base experience yield when defeating the Pokémon
+
+      - name: species_id
+        description: Identifier linking to Pokémon species
+
+      - name: species_name
+        description: Name of the species
+
+  - name: stg_type
+    description: >
+      Lookup table of Pokémon types (e.g., fire, water, grass).
+
+    columns:
+      - name: type_id
+        description: Unique identifier for the type
+        tests: [not_null, unique]
+
+      - name: type_name
+        description: Name of the Pokémon type
+
+  - name: stg_pokemon_type
+    description: >
+      Bridge table linking Pokémon to their types. A Pokémon can have one or two types.
+
+    columns:
+      - name: pokemon_id
+        description: Foreign key to stg_pokemon
+
+      - name: type_id
+        description: Foreign key to stg_type
+
+      - name: type_slot
+        description: >
+          Indicates whether the type is primary (1) or secondary (2)
