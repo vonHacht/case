@@ -27,6 +27,7 @@ def tests(session: Session):
 @nox.session(python="3")
 def build_docs(session: Session):
     session.install("-r", "requirements.txt")
+    session.run("dbt", "seed")
     session.run("dbt", "build")
     session.run("dbt", "docs", "generate")
     # session.run("mv", "target", "docs")
