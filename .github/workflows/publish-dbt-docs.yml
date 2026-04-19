@@ -30,13 +30,29 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dbt
+      - name: Install
         run: |
           python -m pip install -r requirements.txt
+
+      - name: Install project deps
+        run: dbt deps --profiles-dir .
+
+      - name: Build dbt project
+        run: dbt build --profiles-dir .
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_SCHEMA: ${{ secrets.DB_SCHEMA }}
 
       - name: Create docs
         run: |
           python -m nox -s build_docs
+
+      - name: Add .nojekyll
+        run: touch target/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
