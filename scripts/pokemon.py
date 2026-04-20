@@ -20,7 +20,8 @@ def get_json(url: str) -> dict:
     return resp.json()
 
 
-def fetch_pokemon(limit: int = 20) -> tuple[list[dict], list[dict], list[dict]]:
+def fetch_pokemon(
+        limit: int = 20) -> tuple[list[dict], list[dict], list[dict]]:
     """
     Returns:
       pokemon_rows: one row per pokemon
@@ -38,17 +39,22 @@ def fetch_pokemon(limit: int = 20) -> tuple[list[dict], list[dict], list[dict]]:
         pokemon_id = details["id"]
         species = details["species"]
 
-        pokemon_rows.append(
-            {
-                "pokemon_id": pokemon_id,
-                "pokemon_name": details["name"],
-                "height": details["height"],
-                "weight": details["weight"],
-                "base_experience": details.get("base_experience"),
-                "species_id": species["url"].rstrip("/").split("/")[-1],
-                "species_name": species["name"],
-            }
-        )
+        pokemon_rows.append({
+            "pokemon_id":
+            pokemon_id,
+            "pokemon_name":
+            details["name"],
+            "height":
+            details["height"],
+            "weight":
+            details["weight"],
+            "base_experience":
+            details.get("base_experience"),
+            "species_id":
+            species["url"].rstrip("/").split("/")[-1],
+            "species_name":
+            species["name"],
+        })
 
         for t in details["types"]:
             slot = t["slot"]
@@ -60,22 +66,19 @@ def fetch_pokemon(limit: int = 20) -> tuple[list[dict], list[dict], list[dict]]:
                 "type_name": type_name,
             }
 
-            pokemon_type_rows.append(
-                {
-                    "pokemon_id": pokemon_id,
-                    "type_id": type_id,
-                    "type_slot": slot,
-                }
-            )
+            pokemon_type_rows.append({
+                "pokemon_id": pokemon_id,
+                "type_id": type_id,
+                "type_slot": slot,
+            })
 
         # tiny pause to be polite
         time.sleep(0.1)
 
     type_rows = sorted(type_lookup.values(), key=lambda x: x["type_id"])
     pokemon_rows = sorted(pokemon_rows, key=lambda x: x["pokemon_id"])
-    pokemon_type_rows = sorted(
-        pokemon_type_rows, key=lambda x: (x["pokemon_id"], x["type_slot"])
-    )
+    pokemon_type_rows = sorted(pokemon_type_rows,
+                               key=lambda x: (x["pokemon_id"], x["type_slot"]))
 
     return pokemon_rows, type_rows, pokemon_type_rows
 

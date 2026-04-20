@@ -2,7 +2,8 @@ name: Publish dbt docs
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '**'
   workflow_dispatch:
 
 permissions:
@@ -68,21 +69,6 @@ jobs:
             sleep 2
           done
 
-      - name: Create docs
+      - name: Test dbt
         run: |
-          python -m nox -s build_docs -- --local-profile
-
-      - name: Add .nojekyll
-        run: touch target/.nojekyll
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./target
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          python -m pip nox -s tests -- --local-profile
