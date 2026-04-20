@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  run-tests:
     runs-on: ubuntu-latest
 
     services:
