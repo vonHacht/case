@@ -1,3 +1,8 @@
+# Tests
 nox
+yapf
+flake8
+
+# Data Build Tool
 dbt-core
 dbt-postgres
