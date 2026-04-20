@@ -34,6 +34,7 @@ def tests(session: Session):
     yapf(session, "scripts")
     flake8(session, "scripts noxfile.py")
 
+    dbt_run(session, "seed", local_profile=local_profile)
     dbt_run(session, "test", local_profile=local_profile)
 
     # session.run("pytest")
