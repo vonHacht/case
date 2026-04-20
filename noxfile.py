@@ -34,8 +34,9 @@ def tests(session: Session):
     yapf(session, "scripts")
     flake8(session, "scripts noxfile.py")
 
-    dbt_run(session, "seed", local_profile=local_profile)
-    dbt_run(session, "test", local_profile=local_profile)
+    # build runs dbt test
+    dbt_run(session, "deps", local_profile=local_profile)
+    dbt_run(session, "build", local_profile=local_profile)
 
     # session.run("pytest")
 
@@ -46,6 +47,5 @@ def build_docs(session: Session):
 
     install(session)
     dbt_run(session, "deps", local_profile=local_profile)
-    dbt_run(session, "seed", local_profile=local_profile)
     dbt_run(session, "build", local_profile=local_profile)
     dbt_run(session, "docs", "generate", local_profile=local_profile)
