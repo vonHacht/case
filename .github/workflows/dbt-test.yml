@@ -1,4 +1,4 @@
-name: Publish dbt docs
+name: Test
 
 on:
   push:
