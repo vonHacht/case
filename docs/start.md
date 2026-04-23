@@ -2,7 +2,7 @@
 
 ## Run project
 
-1. This project needs postgresql, it can either be started via the [docker container provided](docker-postgresql.md) or install separately
+1. This project needs postgresql, it can either be started via the [docker container provided](docker-postgresql.md) or installed separately
     ```
     sudo apt update
     sudo apt install postgresql postgresql-contrib -y
