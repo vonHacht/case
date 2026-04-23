@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Executive Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background: #f7f7f7;
+        }
+        h1, h2 {
+            margin-bottom: 0.5rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pokémon Dashboard</h1>
+    <p>Fun facts from the dbt-built Pokémon warehouse.</p>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Pokémon by Primary Type</h2>
+            <canvas id="typeChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Average Weight by Type</h2>
+            <canvas id="weightChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Top 10 by Base Experience</h2>
+        <canvas id="xpChart"></canvas>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <h2>Strongest Pokémon Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Base Experience</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in strongest_table %}
+                <tr>
+                    <td>{{ row.pokemon_name }}</td>
+                    <td>{{ row.base_experience }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {{ type_labels|json_script:"type-labels" }}
+    {{ type_counts|json_script:"type-counts" }}
+    {{ strongest_names|json_script:"xp-labels" }}
+    {{ strongest_values|json_script:"xp-values" }}
+    {{ weight_labels|json_script:"weight-labels" }}
+    {{ weight_values|json_script:"weight-values" }}
+
+    <script>
+        const typeLabels = JSON.parse(document.getElementById("type-labels").textContent);
+        const typeCounts = JSON.parse(document.getElementById("type-counts").textContent);
+        const xpLabels = JSON.parse(document.getElementById("xp-labels").textContent);
+        const xpValues = JSON.parse(document.getElementById("xp-values").textContent);
+        const weightLabels = JSON.parse(document.getElementById("weight-labels").textContent);
+        const weightValues = JSON.parse(document.getElementById("weight-values").textContent);
+
+        new Chart(document.getElementById("typeChart"), {
+            type: "pie",
+            data: {
+                labels: typeLabels,
+                datasets: [{
+                    data: typeCounts
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("weightChart"), {
+            type: "bar",
+            data: {
+                labels: weightLabels,
+                datasets: [{
+                    label: "Average Weight",
+                    data: weightValues
+                }]
+            }
+        });
+
+        new Chart(document.getElementById("xpChart"), {
+            type: "bar",
+            data: {
+                labels: xpLabels,
+                datasets: [{
+                    label: "Base Experience",
+                    data: xpValues
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
