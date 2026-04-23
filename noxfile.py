@@ -28,8 +28,8 @@ def yapf(session: Session, toscan: str):
 
 
 def build_dbt(session: Session, local_profile: bool):
-    dbt_run(session, "deps", local_profile=local_profile)
-    dbt_run(session, "seed", local_profile=local_profile)
+    # dbt_run(session, "deps", local_profile=local_profile)
+    # dbt_run(session, "seed", local_profile=local_profile)
     dbt_run(session, "build", local_profile=local_profile)
 
 
@@ -42,8 +42,8 @@ def tests(session: Session):
     local_profile = "--local-profile" in session.posargs
 
     install(session)
-    yapf(session, "scripts")
-    flake8(session, "scripts noxfile.py")
+    yapf(session, "scripts case_app dashboard manage.py")
+    flake8(session, "scripts case_app dashboard manage.py noxfile.py")
 
     # build runs dbt test
     dbt_run(session, "deps", local_profile=local_profile)

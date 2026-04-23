@@ -104,5 +104,6 @@ def run():
     print(" - seeds/raw_type.csv")
     print(" - seeds/raw_pokemon_type.csv")
 
+
 if __name__ == "__main__":
     run()
