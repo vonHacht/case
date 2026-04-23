@@ -1,10 +1,11 @@
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+
 import nox
 from nox.sessions import Session
-
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from scripts.pokemon_api import run as pokemon_api_run
 
 
 def install(session: Session):
@@ -26,6 +27,16 @@ def yapf(session: Session, toscan: str):
     session.run("yapf", "-r", "-d", *toscan.split())
 
 
+def build_dbt(session: Session, local_profile: bool):
+    dbt_run(session, "deps", local_profile=local_profile)
+    dbt_run(session, "seed", local_profile=local_profile)
+    dbt_run(session, "build", local_profile=local_profile)
+
+
+@nox.session(python="3")
+def generate_seeds(session: Session):
+    pokemon_api_run()
+
 @nox.session(python="3")
 def tests(session: Session):
     local_profile = "--local-profile" in session.posargs
@@ -42,10 +53,18 @@ def tests(session: Session):
 
 
 @nox.session(python="3")
-def build_docs(session: Session):
+def build_docs(session: Session) -> None:
     local_profile = "--local-profile" in session.posargs
 
     install(session)
-    dbt_run(session, "deps", local_profile=local_profile)
-    dbt_run(session, "build", local_profile=local_profile)
+    build_dbt(session, local_profile)
     dbt_run(session, "docs", "generate", local_profile=local_profile)
+
+
+@nox.session(python="3")
+def database_setup(session: Session) -> None:
+    local_profile = "--local-profile" in session.posargs
+
+    install(session)
+    build_dbt(session, local_profile)
+

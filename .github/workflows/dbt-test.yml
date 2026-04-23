@@ -21,20 +21,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: pokemon
         ports:
-          - 5432:5432
+          - 5433:5433
         options: >-
           --health-cmd="pg_isready -U postgres -d pokemon"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-
-    env:
-      DB_HOST: 127.0.0.1
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: pokemon
-      DB_SCHEMA: public
 
     steps:
       - name: Check out repo
@@ -58,7 +50,7 @@ jobs:
         env:
           PGPASSWORD: postgres
         run: |
-          until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME"; do
+          until pg_isready -h 127.0.0.1 -p 5433 -U postgres -d pokemon; do
             sleep 2
           done
 

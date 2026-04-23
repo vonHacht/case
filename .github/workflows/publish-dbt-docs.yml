@@ -26,7 +26,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: pokemon
         ports:
-          - 5432:5432
+          - 5433:5433
         options: >-
           --health-cmd="pg_isready -U postgres -d pokemon"
           --health-interval=10s
@@ -36,14 +36,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    env:
-      DB_HOST: 127.0.0.1
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: pokemon
-      DB_SCHEMA: public
 
     steps:
       - name: Check out repo
@@ -64,7 +56,7 @@ jobs:
 
       - name: Wait for Postgres
         run: |
-          until pg_isready -h 127.0.0.1 -p 5432 -U postgres -d pokemon; do
+          until pg_isready -h 127.0.0.1 -p 5433 -U postgres -d pokemon; do
             sleep 2
           done
 

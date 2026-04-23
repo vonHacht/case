@@ -92,7 +92,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
-if __name__ == "__main__":
+def run():
     pokemon_rows, type_rows, pokemon_type_rows = fetch_pokemon(limit=20)
 
     write_csv(OUT_DIR / "raw_pokemon.csv", pokemon_rows)
@@ -103,3 +103,6 @@ if __name__ == "__main__":
     print(" - seeds/raw_pokemon.csv")
     print(" - seeds/raw_type.csv")
     print(" - seeds/raw_pokemon_type.csv")
+
+if __name__ == "__main__":
+    run()

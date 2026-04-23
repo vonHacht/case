@@ -1,12 +1,12 @@
 case:
-  target: ci
+  target: dev
   outputs:
-    ci:
+    dev:
       type: postgres
-      host: "{{ env_var('DB_HOST') }}"
-      port: "{{ env_var('DB_PORT') | int }}"
-      user: "{{ env_var('DB_USER') }}"
-      password: "{{ env_var('DB_PASSWORD') }}"
-      dbname: "{{ env_var('DB_NAME') }}"
-      schema: "{{ env_var('DB_SCHEMA') }}"
+      host: 127.0.0.1
+      port: 5433
+      user: postgres
+      password: postgres
+      dbname: pokemon
+      schema: public
       threads: 1
